@@ -1,4 +1,5 @@
 const FIELD = document.getElementById("field");
+const RESOURCES_PATH = "../resources/"; // ПРОВЕРИТЬ ЧТО УКАЗАН ПРАВИЛЬНЫЙ ПУТЬ
 const CONFIG = {
     fieldSize: {
         x: 3,
@@ -38,7 +39,7 @@ for (let i = 0; i < cells.length; i++) {
 function init() {
     let tr = document.createElement("tr");
     let td = document.createElement("td");
-    
+
     td.style.width = CONFIG.cellSize.x;
     td.style.height = CONFIG.cellSize.y;
     td.style.backgroundColor = CONFIG.closedCellColor;
@@ -72,12 +73,12 @@ function getRandColor() {
         r: getRandNum(0, 255),
         g: getRandNum(0, 255),
         b: getRandNum(0, 255)
-    }
+    };
 
     color.toCSS = () => { return "rgb("+color.r+","+color.g+","+color.b+")"; };
     color.equal = (value) => {
         return color.r==value.r && color.g==value.g && color.b==value.b;
-    }
+    };
 
     return color;
 }
