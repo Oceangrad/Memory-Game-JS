@@ -1,16 +1,18 @@
 const FIELD = document.getElementById("field");
 const CONFIG = {
     fieldSize: {
-        x: 7,
-        y: 6
+        x: 3,
+        y: 2
     },
     cellSize: {
-        x: "60px",
-        y: "60px"
+        x: "65px",
+        y: "90px"
     },
     closedCellColor: "black",
     timeout: 500,
-    selectedStyle: "3px red solid"
+    selectedCellBorderStyle: "3px red solid", // Style that applies to cell's border when its selected
+    defaultCellBorderStyle: "3px black solid", // Default cell's border style
+    defaultCellBorderRadius: "10px"
 };
 
 init();
@@ -36,9 +38,12 @@ for (let i = 0; i < cells.length; i++) {
 function init() {
     let tr = document.createElement("tr");
     let td = document.createElement("td");
+    
     td.style.width = CONFIG.cellSize.x;
     td.style.height = CONFIG.cellSize.y;
     td.style.backgroundColor = CONFIG.closedCellColor;
+    td.style.borderRadius = CONFIG.defaultCellBorderRadius;
+    td.style.border = CONFIG.defaultCellBorderStyle;
 
     for (let i = 0; i < CONFIG.fieldSize.x; i++) {
         tr.innerHTML += td.outerHTML;
@@ -83,7 +88,6 @@ function getRandNum(start, end) {
     return num;
 }
 
-// Спиздил 0w0
 function shuffle(array) {
   array.sort(() => Math.random() - 0.5);
 }
@@ -97,7 +101,7 @@ function open(i) {
 
     if (first) {
         cell.style.backgroundColor = colors[i].toCSS();
-        cell.style.border = CONFIG.selectedStyle;
+        cell.style.border = CONFIG.selectedCellBorderStyle;
         elem1 = i;
     }
     else {
@@ -106,7 +110,7 @@ function open(i) {
         }
 
         cell.style.backgroundColor = colors[i].toCSS();
-        cell.style.border = CONFIG.selectedStyle;
+        cell.style.border = CONFIG.selectedCellBorderStyle;
         elem2 = i;
 
         let color1 = colors[elem1];
@@ -126,8 +130,8 @@ function open(i) {
                 cell1.style.backgroundColor = CONFIG.closedCellColor;
                 cell2.style.backgroundColor = CONFIG.closedCellColor;
             }
-            cell1.style.border = "";
-            cell2.style.border = "";
+            cell1.style.border = CONFIG.defaultCellBorderStyle;
+            cell2.style.border = CONFIG.defaultCellBorderStyle;
             canOpen = true;
         }, CONFIG.timeout);
     }
