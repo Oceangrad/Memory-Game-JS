@@ -1,5 +1,7 @@
 const FIELD = document.getElementById("field");
-const RESOURCES_PATH = "../resources/"; // ПРОВЕРИТЬ ЧТО УКАЗАН ПРАВИЛЬНЫЙ ПУТЬ
+const RESOURCES_PATH = "./resources/";
+const IMAGES = ["1.png", "2.png", "3.png"];
+const CARD_BACK_IMAGE = "url("+RESOURCES_PATH+"back.png)";
 const CONFIG = {
     fieldSize: {
         x: 3,
@@ -18,8 +20,11 @@ const CONFIG = {
 
 init();
 
+let availableImages = Array.from(IMAGES);
+
 let cells = FIELD.getElementsByTagName("td");
-let colors = fillColorArray();
+let colors = fillImgArray();
+// let colors = fillColorArray();
 
 let first = true;
 
@@ -42,7 +47,7 @@ function init() {
 
     td.style.width = CONFIG.cellSize.x;
     td.style.height = CONFIG.cellSize.y;
-    td.style.backgroundColor = CONFIG.closedCellColor;
+    td.style.background = CARD_BACK_IMAGE;
     td.style.borderRadius = CONFIG.defaultCellBorderRadius;
     td.style.border = CONFIG.defaultCellBorderStyle;
 
@@ -55,33 +60,61 @@ function init() {
     }
 }
 
-function fillColorArray() {
-    let colors = [];
+function fillImgArray() {
+    let images = [];
     let even = CONFIG.fieldSize.x*CONFIG.fieldSize.y % 2;
     if (even !== 0) throw new Error("Number of cell should be even.");
 
     for (let i = 0; i < (CONFIG.fieldSize.x*CONFIG.fieldSize.y)/2; i++) {
-        let color = getRandColor();
-        colors.push(color, color);
+        let image = getRandImage();
+        images.push(image, image);
     }
-    shuffle(colors);
-    return colors;
+    shuffle(images);
+    return images;
 }
 
-function getRandColor() {
-    let color = {
-        r: getRandNum(0, 255),
-        g: getRandNum(0, 255),
-        b: getRandNum(0, 255)
+function getRandImage() {
+    let image = {
+        path: availableImages.splice(getRandNum(0, availableImages.length-1), 1)[0]
     };
 
-    color.toCSS = () => { return "rgb("+color.r+","+color.g+","+color.b+")"; };
-    color.equal = (value) => {
-        return color.r==value.r && color.g==value.g && color.b==value.b;
+    image.toCSS = () => { return "url("+RESOURCES_PATH+image.path+")"; };
+    image.equal = (value) => {
+        return image.path==value.path;
     };
 
-    return color;
+    return image;
 }
+
+// function fillColorArray() {
+//     let colors = [];
+//     let even = CONFIG.fieldSize.x*CONFIG.fieldSize.y % 2;
+//     if (even !== 0) throw new Error("Number of cell should be even.");
+
+//     for (let i = 0; i < (CONFIG.fieldSize.x*CONFIG.fieldSize.y)/2; i++) {
+//         let color = getRandColor();
+//         colors.push(color, color);
+//     }
+//     shuffle(colors);
+//     return colors;
+// }
+
+// function getRandColor() {
+//     let color = {
+//         r: getRandNum(0, 255),
+//         g: getRandNum(0, 255),
+//         b: getRandNum(0, 255)
+//     };
+
+//     color.toCSS = () => { return "rgb("+color.r+","+color.g+","+color.b+")"; };
+//     color.equal = (value) => {
+//         return color.r==value.r && color.g==value.g && color.b==value.b;
+//     };
+
+//     return color;
+// }
+
+
 
 function getRandNum(start, end) {
     let num = (Math.random()*(end-start))+start;
@@ -101,7 +134,7 @@ function open(i) {
     if (closedElems.findIndex((val) => val == i) !== -1 || !canOpen) return;
 
     if (first) {
-        cell.style.backgroundColor = colors[i].toCSS();
+        cell.style.background = colors[i].toCSS();
         cell.style.border = CONFIG.selectedCellBorderStyle;
         elem1 = i;
     }
@@ -110,7 +143,7 @@ function open(i) {
             return;
         }
 
-        cell.style.backgroundColor = colors[i].toCSS();
+        cell.style.background = colors[i].toCSS();
         cell.style.border = CONFIG.selectedCellBorderStyle;
         elem2 = i;
 
@@ -128,8 +161,8 @@ function open(i) {
                     console.log("win");
                 }
             } else {
-                cell1.style.backgroundColor = CONFIG.closedCellColor;
-                cell2.style.backgroundColor = CONFIG.closedCellColor;
+                cell1.style.background = CARD_BACK_IMAGE;
+                cell2.style.background = CARD_BACK_IMAGE;
             }
             cell1.style.border = CONFIG.defaultCellBorderStyle;
             cell2.style.border = CONFIG.defaultCellBorderStyle;
